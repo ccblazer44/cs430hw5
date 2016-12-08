@@ -13,6 +13,9 @@
 
 #define RGB_NUMBER 255
 
+float trans_x = 0, trans_y = 0;
+
+
 
 typedef struct RGBpixel{
     unsigned char r,g,b;
@@ -178,8 +181,22 @@ void glCompileShaderOrDie(GLuint shader) {
 }
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
+      glfwSetWindowShouldClose(window, GLFW_TRUE);
+    }
+    if (key == GLFW_KEY_UP && action == GLFW_PRESS){
+      trans_y += 0.1;
+    }
+    if (key == GLFW_KEY_DOWN && action == GLFW_PRESS){
+      trans_y -= 0.1;
+    }
+    if (key == GLFW_KEY_LEFT && action == GLFW_PRESS){
+      trans_x -= 0.1;
+    }
+    if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS){
+      trans_x += 0.1;
+    }
+
 }
 
 static void error_callback(int error, const char* description){
@@ -295,7 +312,7 @@ int main(int argc, char *argv[]){
   {
       float ratio;
       int width, height;
-      mat4x4 m, p, mvp;
+      mat4x4 m, p, mvp, trans;
 
       glfwGetFramebufferSize(window, &width, &height);
       ratio = width / (float) height;
@@ -303,8 +320,16 @@ int main(int argc, char *argv[]){
       glViewport(0, 0, width, height);
       glClear(GL_COLOR_BUFFER_BIT);
 
-      mat4x4_identity(m);
-      mat4x4_rotate_Z(m, m, (float) glfwGetTime());
+      mat4x4_identity(m); // main matrix
+
+      mat4x4_identity(trans); // translation matrix
+
+
+      mat4x4_translate(trans,trans_x,trans_y,0);  // translate
+
+
+      mat4x4_add(m,trans,m); // combine translation and main matrix
+
       mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
       mat4x4_mul(mvp, p, m);
 
