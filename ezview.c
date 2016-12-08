@@ -213,7 +213,7 @@ int main(int argc, char *argv[]){
       glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
       glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-  window = glfwCreateWindow(680, 480, "ezview", NULL, NULL);
+  window = glfwCreateWindow(800, 600, "ezview", NULL, NULL);
   if (!window){
       glfwTerminate();
       exit(EXIT_FAILURE);
@@ -284,7 +284,7 @@ int main(int argc, char *argv[]){
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->width, image->height, 0, GL_RGBA,
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->width, image->height, 0, GL_RGB,
    GL_UNSIGNED_BYTE, image->data);
 
   glActiveTexture(GL_TEXTURE0);
@@ -310,7 +310,7 @@ int main(int argc, char *argv[]){
 
       glUseProgram(program);
       glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
-      glDrawArrays(GL_TRIANGLES, 0, 3);
+      glDrawArrays(GL_TRIANGLES, 0, 6);
 
       glfwSwapBuffers(window);
       glfwPollEvents();
