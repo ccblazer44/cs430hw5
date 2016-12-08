@@ -182,6 +182,9 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
+static void error_callback(int error, const char* description){
+    fprintf(stderr, "Error: %s\n", description);
+}
 
 int main(int argc, char *argv[]){
 
@@ -199,13 +202,18 @@ int main(int argc, char *argv[]){
 
   glfwSetErrorCallback(error_callback);
 
-  if (!glfwInit())
-      exit(EXIT_FAILURE);
+  if (!glfwInit()){
+    exit(EXIT_FAILURE);
+  }
 
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-  window = glfwCreateWindow(800, 600, "ezview", NULL, NULL);
+      glfwDefaultWindowHints();
+      glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
+      glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+
+  window = glfwCreateWindow(680, 480, "ezview", NULL, NULL);
   if (!window){
       glfwTerminate();
       exit(EXIT_FAILURE);
@@ -222,6 +230,7 @@ int main(int argc, char *argv[]){
   glGenBuffers(1, &vertex_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertexes), vertexes, GL_STATIC_DRAW);
+
 
   vertex_shader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
@@ -265,8 +274,9 @@ int main(int argc, char *argv[]){
                         sizeof(Vertex),
       (void*) (sizeof(float) * 2));
 
-  int image_width = 4;
-  int image_height = 4;
+
+  // int image_width = 4;
+  // int image_height = 4;
 
   GLuint texID;
   glGenTextures(1, &texID);
@@ -274,8 +284,8 @@ int main(int argc, char *argv[]){
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA,
-   GL_UNSIGNED_BYTE, image);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->width, image->height, 0, GL_RGBA,
+   GL_UNSIGNED_BYTE, image->data);
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, texID);
