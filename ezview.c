@@ -11,7 +11,6 @@
 #include "linmath.h"
 
 #define RGB_NUMBER 255
-
 // global variables for affine transformations
 float trans_x = 0, trans_y = 0, scale = 1, rotation = 0, sheer = 0;
 
@@ -329,11 +328,7 @@ int main(int argc, char *argv[]){
       // affine transformations
       mat4x4_identity(trans); // translation matrix
       mat4x4_translate(trans, trans_x, trans_y,0);  // translate
-      mat4x4_add(m,trans,m); // combine translation and main matrix
-
-      mat4x4_identity(rotat); // rotation matrix
-      mat4x4_rotate_Z(rotat, rotat, rotation); // rotate
-      mat4x4_mul(m ,rotat, m); // combine rotation and main matrix
+      mat4x4_add(m, trans, m); // combine translation and main matrix
 
       mat4x4_identity(shr); // sheer matrix
       mat4x4_shear(shr, shr, sheer, sheer);  // sheer
@@ -342,6 +337,10 @@ int main(int argc, char *argv[]){
       mat4x4_identity(scl); // scale matrix
       mat4x4_scale_aniso(scl, scl, scale, scale, scale);  // scale
       mat4x4_add(m, scl, m); // combine scale and main matrix
+
+      mat4x4_identity(rotat); // rotation matrix
+      mat4x4_rotate_Z(rotat, rotat, rotation); // rotate
+      mat4x4_mul(m, rotat, m); // combine rotation and main matrix
       // end affine transformations
 
       mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
