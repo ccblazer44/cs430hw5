@@ -1,4 +1,4 @@
-PPM image viewer by Chris Blazer
+PPM image viewer for Windows by Chris Blazer
 
 Use "nmake" to implement the makefile (in developer command prompt for visual studio), which compiles the program.
 
